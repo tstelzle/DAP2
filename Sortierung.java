@@ -10,10 +10,14 @@ public class Sortierung
     public static void main(String []args)
     {
         Random numberGen = new Random();
-        if(args.length != 2) {
-            System.out.println("Bitte zwei Argumente angeben!");
+        if (args.length == 0) {
+            System.out.println("Fehler: n angeben!");
+            return;
+        } else if(args.length > 3) {
+            System.out.println("Fehler: Zu viele Argumente!");
             return;
         }
+
         int n = 0;
         try {
             n = Integer.parseInt(args[0]);
@@ -27,23 +31,41 @@ public class Sortierung
         }
         int []arr = new int[n];
 
-        if(args[1].equals("auf")) {
-            for(int i=0; i<arr.length; i++)
-                arr[i] = i;
-        } else if(args[1].equals("ab")) {
-            for(int i=0; i<arr.length; i++)
-                arr[i] = n-i;
-        } else if(args[1].equals("rand")) {
+        boolean usingMergeSort = true;
+        if(args.length >= 2) {
+            if(args[1].equals("insert")) {
+                usingMergeSort = false;
+            } else if(!args[1].equals("merge")) {
+                System.out.println("Fehler: Zweites Argument keine Sortierung!");
+                return;
+            }
+        }
+        if(args.length == 3) {
+            if(args[2].equals("auf")) {
+                for(int i=0; i<arr.length; i++)
+                    arr[i] = i;
+            } else if(args[2].equals("ab")) {
+                for(int i=0; i<arr.length; i++)
+                    arr[i] = n-i;
+            } else if(args[2].equals("rand")) {
+                for(int i=0; i<arr.length; i++)
+                    arr[i] = numberGen.nextInt();
+            } else {
+                System.out.println("Fehler: Drittes Argument wurde nicht erkannt!");
+                return;
+            }
+        } else {
             for(int i=0; i<arr.length; i++)
                 arr[i] = numberGen.nextInt();
-        } else {
-            System.out.println("Fehler: Zweites Argument wurde nicht erkannt!");
-            return;
         }
 
         long tStart, tEnd;
         tStart = System.currentTimeMillis();
-        insertionSort(arr);
+        if(usingMergeSort) {
+            mergeSort(arr);
+        } else {
+            insertionSort(arr);
+        }
         tEnd = System.currentTimeMillis();
         if(isSorted(arr)) {
             System.out.println("Feld sortiert.");
@@ -69,19 +91,53 @@ public class Sortierung
             }
             array[i+1] = key;
         }
-        assert isSorted(array);
+        assert isSorted(array) : "insertionSort hat die Liste nicht sortiert :/";
     }
 
     public static void mergeSort(int []array)
     {
         int[] tmpArray = new int[array.length];
         mergeSort(array, tmpArray, 0, array.length-1);
-        assert isSorted(array);
+        assert isSorted(array) : "mergeSort hat die Liste nicht sortiert :/";
     }
 
     public static void mergeSort(int[] array, int[] tmpArray, int left, int right)
     {
-        return;
+        if(left < right) {
+            int q = (left+right)/2;
+            mergeSort(array, tmpArray, left, q);
+            mergeSort(array, tmpArray, q+1, right);
+            merge(array, tmpArray, left, right);
+        }
+    }
+
+    public static void merge(int[] array, int[] tmpArray, int left, int right)
+    {
+        int mid = (left+right+2)/2;
+        int pos1 = left;
+        int pos2 = mid;
+        for(int i=left; i <= right; i++) {
+            if(pos1 >= mid) {
+                tmpArray[i] = array[pos2];
+                pos2++;
+                continue;
+            }
+            if(pos2 > right) {
+                tmpArray[i] = array[pos1];
+                pos1++;
+                continue;
+            }
+            if(array[pos1] <= array[pos2]) {
+                tmpArray[i] = array[pos1];
+                pos1++;
+                continue;
+            }
+            tmpArray[i] = array[pos2];
+            pos2++;
+        }
+        for(int i=left; i <= right; i++) {
+            array[i] = tmpArray[i];
+        }
     }
 
     public static boolean isSorted(int []array)
