@@ -1,3 +1,7 @@
+//Die Klasse implementiert Bubblesort mit Zeitmessung 
+/*
+**Autor: Frederic Arnold und Tarek Stelzle
+*/
 public class Bubblesort
 {
 	public Bubblesort()
@@ -7,10 +11,10 @@ public class Bubblesort
 
 	public static void main(String[] args)
 	{
-		long tStart, tEnd, msec;
-
-		//Einlesen des Float arguments
+		//Initialisieren des float Parameters fuer die Zeit
 		float zeit = 0f;
+
+		//Auslesen des uebergebenen Zeitparameters mit Pruefung auf Korrektheit
 		if(args.length != 1)
 		{
 			System.out.println("Falsche Argumentanzahl!");	
@@ -30,13 +34,18 @@ public class Bubblesort
 			System.out.println("Zeit ist kleiner null!");
 			return;
 		}
+
 		//Ausgabe der Zeit - nur zur Kontrolle
 		System.out.println("Uebergebenes Argument:" + zeit);
 
-		//Feld initialisieren
+		//Feld zur Sortierung befuellen
 		int[] tmp = Feld(50000);
-		long msek = (long)(zeit *1000);	
+
+		//Variablen zur Zeitmessung (msek = uebergebene Zeit als long zum Vergleich)
+		long tStart, tEnd, msec, msek;
+		msek = (long)(zeit *1000);	
 		System.out.println("Uebergebenes Argument als Long:" + msek);
+		
 		if(sortiert(tmp))
 		{
 			System.out.println("Feld Sortiert!");
@@ -50,10 +59,12 @@ public class Bubblesort
 		bubbleSort(tmp);
 		tEnd = System.currentTimeMillis();
 		
+		//Berechnung der benoetigten Zeit
 		msec = tEnd - tStart;
 		
 		System.out.println("Benoetigte Zeit:" + msec);
-
+		
+		//Pruefung ob Bubblesort laenger dauerte als die uebergebene Variable (zeit)
 		if(msec < msek)
 		{
 			System.out.println("Bubblesort braucht nicht so lang!");
@@ -71,6 +82,7 @@ public class Bubblesort
 		}
 	}
 
+	//Methode zum ueberpruefen ob ein Feld aufsteigend sortiert ist
 	public static boolean sortiert(int[] arr)
 	{
 		for(int i=1; i< arr.length; i++)
@@ -82,7 +94,8 @@ public class Bubblesort
 		}
 		return true;
 	}
-
+	
+	//Methode zum Initialisieren von dem Feld (n ist die groesse des Feldes)
 	public static int[] Feld(int n)
 	{
 		int[] arr = new int[n+1];
@@ -92,7 +105,8 @@ public class Bubblesort
 		}
 		return arr;
 	}
-
+	
+	//Algorithmus Bubblesort wie im Pseudocode vorgegeben
 	public static void bubbleSort(int[] array)
 	{
 		int n = array.length;
