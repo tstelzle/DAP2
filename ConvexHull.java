@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import java.util.*;
+=======
+import java.util.LinkedList<E>;
+>>>>>>> 185f0dafe0512a6af52183e02b80152a4b164bbe
 
 public class ConvexHull
 {
@@ -9,6 +13,7 @@ public class ConvexHull
 	
 	public static void main(String[] args)
 	{
+<<<<<<< HEAD
 		/*
 		LinkedList<Point> liste = new LinkedList<Point>();
 		liste.add(new Point(2, 3.0, 4.5));
@@ -39,10 +44,19 @@ public class ConvexHull
 		}
 		liste.add(eins, zwei);
 		return null;
+=======
+		LinkedList() liste = new LinkedList();
+
+
+	public List<Point> simpleConvex(Point[] ps)
+	{
+		;
+>>>>>>> 185f0dafe0512a6af52183e02b80152a4b164bbe
 	}
 
 	Point[][] choose2(Point[] ps)
 	{
+<<<<<<< HEAD
 		Point[][] arr2;
 		for(int i=0; i<ps.length; i++)
 		{
@@ -53,5 +67,7 @@ public class ConvexHull
 		}
 		return arr2;
 
+=======
+>>>>>>> 185f0dafe0512a6af52183e02b80152a4b164bbe
 	}
 }
