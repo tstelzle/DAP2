@@ -20,7 +20,7 @@ public class HullApp
 		}
 		ConvexHull ch = new ConvexHull();
 		LinkedList<Point> hull = ch.simpleConvex(ch.pointsInTriangle());
-		System.out.println("Punkte der konvexen Hülle: " + hull.size());
+		System.out.println("Punkte der konvexen Hülle: " + (hull.size()/2));
 	}
 }
 
