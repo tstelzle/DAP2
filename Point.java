@@ -7,7 +7,8 @@ class Point
 	int dim;
 	double[] ds;
 
-	//Konstruktur erzeugt das Objekt und setzt die globalen Variablen anhand er uebergebenen Parameter
+	//Konstruktur erzeugt das Objekt und setzt die globalen Variablen 
+	//anhand er uebergebenen Parameter
 	public Point(int d, double... args)
 	{
 		if(d != args.length) {
