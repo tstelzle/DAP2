@@ -1,6 +1,6 @@
 //Die Klasse Quicksort wendet den Quickosrt algorithmus auf ein Feld mit Zufallszahlen an und misst die Zeit
 
-//Autoren: Tarek Stelyzle und Frederic Arnold
+//Autoren: Tarek Stelzle und Frederic Arnold
 
 public class Quicksort
 {
