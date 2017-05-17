@@ -88,8 +88,7 @@ interface Distance {
 //Eucklid Distance implentiert das Interface Distance
 class EuclidDistance implements Distance
 {
-	//!!!!!!!! muss noch implementier werden
-	public EuclidDistance() {}
+	public EuclidDistance()	{}
 
 	//Interfacemethode: Berechnet mit hilfe von Simplex(dist) die Streckenlanegen zwischen 2 Punkten
 	public double distance(Point p1, Point p2)
