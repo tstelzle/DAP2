@@ -1,20 +1,27 @@
+//Die Klasse Quicksort wendet den Quickosrt algorithmus auf ein Feld mit Zufallszahlen an und misst die Zeit
+
+//Autoren: Tarek Stelyzle und Frederic Arnold
+
 public class Quicksort
 {
 	public Quicksort()
 	{
 
 	}
-
+	
 	public static void main(String[] args)
 	{
+		//Eingabe Parameter pruefen
 		if(args.length == 0 || args.length > 1)
 		{	
 			System.out.println("Falsche Argumenteingabe!");
 			return;
 		}
-
+		
+		//Groesse des Arrays initialisieren
 		int arrSize = 0;
 
+		//Parameter fuer die Arraygroesse der Variable zuweisen
 		try
 		{
 			arrSize = Integer.parseInt(args[0]);
@@ -23,28 +30,37 @@ public class Quicksort
 			System.out.println("Keine Zahl uebergeben!");
 			return;
 		}
-
+		
+		//negative Zahlen werden nicht akzeptiert
 		if(arrSize < 0)
 		{
 			System.out.println("Die Zahl darf nicht negativ sein.");
 			return;
 		}
-
+		
+		//Feld wird initiliasiert, die Methode genRandom befuell das Array
 		int[] arr = genRandom(arrSize);
 		
+		//Pruefung ob das Array schon sortiert ist
 		System.out.println(isSorted(arr));
 		
+		//Variableninitialisierung fuer die Zeitmessung
 		long tStart, tEnd;
-
+		
+		//Zeitmessung starten
 		tStart = System.currentTimeMillis();
+		//Quicksort wird ausgefuhrt
 		quicksort(arr, 0, arr.length-1);
+		//Zeitmessung stoppen
 		tEnd = System.currentTimeMillis();
 		
 		System.out.println("Dauer: " + (tEnd-tStart) + " ms");
-
+		
+		//Pruefung ob das Array aufsteigen sortiert wurde
 		System.out.println(isSorted(arr));
 	}
 
+	//Methode zur Pruefung ob ein Array aufsteigend sortiert ist
 	public static boolean isSorted(int[] arr)
 	{
 		for(int i = 1; i<arr.length; i++)
@@ -57,7 +73,8 @@ public class Quicksort
 
 		return true;
 	}
-
+	
+	//Quicksortalgorithmus nach Aufgabenstellung
 	public static void quicksort(int[] arr, int l, int r)
 	{
 		if(l < r)
@@ -88,7 +105,8 @@ public class Quicksort
 		quicksort(arr, i ,r);
 		}
 	}
-
+	
+	//Methode befuellt ein Array mit zufaelligen Zahlen, die Arraygroesse wird als Parameter uebergeben
 	public static int[] genRandom(int size)
 	{
 		java.util.Random numberGen = new java.util.Random();
