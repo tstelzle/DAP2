@@ -1,8 +1,16 @@
+/*
+Die Application.java beinhaltet mehere Klassen, welche insgesmat die Aufgabe 4.1 loesen
+Autoren: Tarek Stelzle und Frederic Arnold
+*/
+
+//Die Klasse Point erstellt ein Objekt, welches eine Dimension und genuegend Koordinaten fuer die Dimension hat
 class Point
 {
+	//globale Variablen fuer das Objekt Point
 	int dim;
 	double[] ds;
 
+	//Konstruktur erzeugt das Objekt und setzt die globalen Variablen anhand er uebergebenen Parameter
 	public Point(int d, double... args)
 	{
 		if(d != args.length) {
@@ -12,6 +20,7 @@ class Point
 		this.ds = args;
 	}
 
+	//Methode zur Ausgabe zur i-ten Koordinate
 	public double get(int i)
 	{
 		if(i >= this.ds.length || i < 0) {
@@ -20,23 +29,27 @@ class Point
 		return this.ds[i];
 	}
 
+	//Methode zur Ausgabe der Dimension des Points
 	public int dim()
 	{
 		return this.dim;
 	}
 }	
 
-
+//abstrake Klasse fuer verschiedene Objekte mit beliebig vielen Eckpunkten
 abstract class Simplex
 {
 	int dim;
 	Point[] points;
-
+	
+	//Konstruktur erstellt einen neuen Point
 	public Simplex(int d, Point... points)
 	{
 		this.dim = d;
 		this.points = points;
 	}
+
+	//Methode zur Ausgabe des i-ten Points
 	public Point getPoint(int i)
 	{
 		if(i >= this.dim || i < 0) {
@@ -44,6 +57,7 @@ abstract class Simplex
 		}
 		return this.points[i];
 	}
+	//Methode berechnet die Distanz zwischen zwei Punkten
 	private double dist(int fst, int snd)
 	{
 		Point fstPoint = this.points[fst];
@@ -55,6 +69,8 @@ abstract class Simplex
 		}
 		return Math.sqrt(sum);
 	}
+
+	//Methode addiert die Distanzen von allen Aussenkanten
 	public double perimeter()
 	{
 		if(this.dim <= 1) {
@@ -69,16 +85,22 @@ abstract class Simplex
 		}
 		return sum;
 	}
+	
+	//abstrakte Methoden Vorgabe: soll in den Unterklassen pruefen, ob das Konstrukt ein Simplex ist
 	public abstract boolean validate();
 }
 
 
+//Unterklasse Triangle von Simplex
 class Triangle extends Simplex
 {
+	//erstellt ein Triangle mit dem Konstruktor von Simplex
 	public Triangle(int d, Point... points)
 	{
 		super(d, points);
 	}
+
+	//geerbte Klasse validate, kontrolliert ob es ein Triangle ist
 	public boolean validate()
 	{
 		for(int i=0; i<3; i++) {
@@ -90,15 +112,19 @@ class Triangle extends Simplex
 	}
 }
 
-
+//Interface zur Vorgabe
 interface Distance {
+	//Methode gibt die Implementierung von distance vor, welches die Streckenlaenge zwischen 2 Punkten berechnen soll
 	public double distance(Point p1, Point p2);
 }
 
-
+//Eucklid Distance implentiert das Interface Distance
 class EuclidDistance implements Distance
 {
+	//!!!!!!!! muss noch implementier werden
 	public EuclidDistance() {}
+
+	//Interfacemethode: Berechnet mit hilfe von Simplex(dist) die Streckenlanegen zwischen 2 Punkten
 	public double distance(Point p1, Point p2)
 	{
 		Triangle t = new Triangle(2, p1, p2);
@@ -106,16 +132,20 @@ class EuclidDistance implements Distance
 	}
 }
 
-
+//Application konstruiert Beispielfaelle fuer die oben implementieren Klassen
 public class Application
 {
 	public static void main(String [] args)
 	{
+		//akzeptier nur Argumente mit 6 oder 0 Eingaben
 		if(args.length != 0 && args.length != 6) {
 			System.out.println("Falsche Argumentenanzahl!");
 			return;
 		}
+
+		//initialisiert ein Feld fuer 3 Koordinaten
 		double [] doubles = {0, 0, 0, 0, 0, 0};
+		//Bei Uebergabe von Elementen werden die Koordinaten nach dem Muster x1, y1, x2, y2, x3, y3 eingefuegt
 		if(args.length == 6) {
 			try {
 				for(int i=0; i<6; i++) {
@@ -125,13 +155,17 @@ public class Application
 				System.out.println("Ein Argument war kein double.");
 				return;
 			}
+		//Bei keiner Uebergabe von Elementen werden zufaellige werden zwischen -1000 und 1000 eingefuegt
 		} else {
 			java.util.Random numberGenerator = new java.util.Random();
 			for(int i=0; i<6; i++) {
 				doubles[i] = (numberGenerator.nextDouble()*2000)-1000;
 			}
 		}
+
+		//Ein Simplex des Typs Triangle wird erstellt
 		Triangle tri = new Triangle(3, new Point(2, doubles[0], doubles[1]), new Point(2, doubles[2], doubles[3]), new Point(2, doubles[4], doubles[5]));
+		//Der Umfang des Triangle wird ausgegeben
 		System.out.println("Umfang: " + tri.perimeter());
 	}
 }
