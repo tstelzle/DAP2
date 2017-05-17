@@ -9,49 +9,62 @@ public class ConvexHull
 	
 	public static void main(String[] args)
 	{
-		/*
-		LinkedList<Point> liste = new LinkedList<Point>();
-		liste.add(new Point(2, 3.0, 4.5));
-		System.out.println(liste.size());
-		*/
+		Point[] ps = {new Point(2,10.0,10.0), new Point(2, 10.0,100.0), new Point(2, 100.0,10.0), new Point(2, 5.0, 5.0)};
+		LinkedList<Point> liste = simpleConvex(ps);
+		int i = 0;
+		while(i < liste.size())
+		{
+			System.out.println(liste.get(i));
+			i++;
+		}
 	}
 
 	public LinkedList<Point> simpleConvex(Point[] ps)
 	{	
-		LinkedList<Point, Point> liste = new LinkedList<Point>();
-		Point eins,zwei;
-		for(p:ps)
+
+		LinkedList<Point> liste = new LinkedList<Point>();
+		Point[][] arr2 = choose2(ps);
+		for(int i=0; i<arr2.length; i++)
 		{
-			for(q:ps)
-			{
-				boolean valid = true;
-				for(l:qs)
+			boolean valid = true;
+				for(int w=0; w<ps.length; w++)
 				{
-					if(l != p && l != q)
+					if(ps[w] != arr2[i][0] && ps[w]!= arr2[i][1])
 					{
-						
+						if(ps[w].get(0) < arr2[i][0].get(0) || ps[w].get(0) > arr2[i][1].get(0) || ps[w].get(1) < arr2[i][0].get(1) || ps[w].get(1) > arr2[i][1].get(1))
+						{
+							valid = false;
+						}
 					}
 				}
-				Point zwei = q;
+			if(valid)
+			{
+				liste.add(arr2[i][0]);
+				liste.add(arr2[i][1]);
 			}
-			Point eins = p;
-
 		}
-		liste.add(eins, zwei);
-		return null;
+		return liste;
 	}
 
 	Point[][] choose2(Point[] ps)
 	{
-		Point[][] arr2;
+		Point[] arr = ps;
+		Point[][] arr2 = new Point[arr.length*arr.length][2];
+		int x = 0;
 		for(int i=0; i<ps.length; i++)
 		{
-			for(int u=1; u<ps.length; u++)
+			int y = 0;
+			for(int u=0; u<ps.length; u++)
 			{
-				arr2[i][arr2 		
+				if(arr[i] != arr[u])
+				{
+					arr2[x][y] = arr[i];
+					y++;
+					arr2[x][y] = arr[u];
+					x++;
+				}
 			}
 		}
 		return arr2;
-
 	}
 }
