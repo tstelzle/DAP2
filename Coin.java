@@ -86,7 +86,7 @@ public class Coin
 	{
 		int[] w;
 
-		if(eingabe.equals(" Euro"))
+		if(eingabe.equals("Euro"))
 		{
 			w = new int[] {200, 100, 50, 20, 10, 5, 2, 1};
 		}
