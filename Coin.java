@@ -66,13 +66,17 @@ public class Coin
 		{
 			//sum beschreibt die Anzahl der Muenzen oder Scheine die gebraucht werden
 			int sum = 0;
+			assert (sum==0) : "Summe wurde nicht zurueckgesetzt.";
 
-			//solange der Geldbetrag groesser dem Schein- oder Muenzbetrag ist wird die Summe um eins erhoeht
+			//solange der Geldbetrag groesser dem Schein- oder Muenzbetrag ist 
+			//wird die Summe um eins erhoeht
 			//und der Betrag um den jeweiligen Wert verringert
 			while(b >= w[i])
 			{
+				assert (b>= w[i]) : "Sollte nicht in der While-Schleife sein.";
 				sum = sum + 1;
 				b = b - w[i];
+				assert b>=0 : "Zu viel abgezogen.";
 			}
 			//Speichern der Summe in dem Array
 			ausgabe[i] = sum;
