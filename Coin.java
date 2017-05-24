@@ -6,7 +6,7 @@ public class Coin
 	public static void main(String[] args)
 	{
 		//Pruefen auf richtige Argumentanzahl
-		if(args.length < 0 || args.length > 2)
+		if(args.length != 2)
 		{
 			System.out.println("Falsche Anzahl an Argumenten.");
 			return;
