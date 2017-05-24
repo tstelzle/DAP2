@@ -77,6 +77,8 @@ public class Quicksort
 	//Quicksortalgorithmus nach Aufgabenstellung
 	public static void quicksort(int[] arr, int l, int r)
 	{
+		assert (l>0 || r<arr.length) : "Grenzen falsch.";
+		
 		if(l < r)
 		{
 			int i = l;
