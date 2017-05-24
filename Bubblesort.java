@@ -150,6 +150,8 @@ public class Bubblesort
 			}	
 		}
 	}
+
+
 	public static long sortAndTime(int[] tmp)
 	{
 		//Bubblesort Ausfuehrung und Zeitmessung
