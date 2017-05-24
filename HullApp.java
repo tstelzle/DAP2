@@ -21,6 +21,12 @@ public class HullApp
 		ConvexHull ch = new ConvexHull();
 		LinkedList<Point> hull = ch.simpleConvex(ch.pointsInTriangle());
 		System.out.println("Punkte der konvexen Hülle: " + (hull.size()/2));
+		int i = 0;
+		while(i < hull.size())
+		{
+			System.out.println("x: " + hull.get(i).get(0) + " y: " + hull.get(i).get(1));
+			i++;
+		}
 	}
 }
 
@@ -42,7 +48,7 @@ class ConvexHull
 			boolean valid = true;
 				for(int w=0; w<ps.length; w++)
 				{
-					if(!isLeftOf(ps[w], arr2[i][0], arr2[i][1])) {
+					if(isLeftOf(ps[w], arr2[i][0], arr2[i][1])) {
 						valid = false;
 					}
 				}
@@ -60,10 +66,10 @@ class ConvexHull
 	public Point[] pointsInTriangle()
 	{
 		java.util.Random numberGen = new java.util.Random();
-		Point[] arr = new Point[1000];
+		Point[] arr = new Point[100];
 		double sum;
 		double frac;
-		for(int i=0; i<1000; i++) {
+		for(int i=0; i<100; i++) {
 			sum = numberGen.nextDouble()*90;
 			frac = numberGen.nextDouble();
 			arr[i] = new Point(2, sum*frac+10, sum*(1-frac)+10);
@@ -106,4 +112,4 @@ class ConvexHull
 		}
 		return arr2;
 	}
-}
+
