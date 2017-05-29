@@ -75,53 +75,43 @@ public class Aufgabe6
 	{
 		//einlesen des Dateipfades und pruefen auf Korrektheit
 		String dateiPfad = "";
-		RandomAccessFile file;
-		/*
-		try{
-			RandomAccessFile file = new RandomAccessFile(dateiPfad, "r");
-		}catch(Exception e)
-		{
-			System.out.println("Dateipfad kann nicht erstellt werden.");
-			System.exit(0);
-		}
-		*/
+		RandomAccessFile file = null;
 
 		try{
 			dateiPfad = args[0];
 			file = new RandomAccessFile(dateiPfad, "r");
-			/*
-			if(!file.canRead() || !file.isFile())
-			{
-				System.out.println("Datei kann nicht eingelesen werden.");
-				return;
-			}
-			*/
 		}catch(Exception e)
 		{
 			System.out.println("Dateipfad existiert nicht.");
-			return;
+			System.exit(0);
 		}
 
 		//Pruefen auf richte Argumenteanzahl
 		if(args.length > 1)
 		{
 			System.out.println("Zu viele Argumente eingegeben.");
-			return;
+			System.exit(0);
 		}
 		
 		//Fals try and catch fehlschlaegt wird hier das Programm abgebrochen (unnoetig)
 		if(dateiPfad.equals(""))
 		{
-			return;
+			System.exit(0);
 		}
+		if(file == null)
+		{
+			System.exit(0);
+		}
+
 
 		//Speicher des Dateinamens
 		int index = dateiPfad.lastIndexOf('/');
 		dateiName = dateiPfad.substring(index+1, dateiPfad.length());
 		//Datei auslesen
 		ArrayList<Intervall> auslesenArr = auslesen(file);
-		//Array sortieren
+		//kopiert die ArrayList auslesenArr (wichtig fuer die Ausgabe)
 		ArrayList<Intervall> Arr = copy(auslesenArr);
+		//Array sortieren
 		ArrayList<Intervall> SortArr = sortStart(Arr);	
 		//Schedulingalgorithmus anwenden
 		ArrayList<Intervall> ScheduleArr = intervallScheduling(SortArr);
@@ -129,6 +119,7 @@ public class Aufgabe6
 		ausgabe(auslesenArr, SortArr, ScheduleArr);
 	}
 
+	//Kopiert die ArrayList (wichtig fuer die Ausgabe)
 	public static ArrayList<Intervall> copy(ArrayList<Intervall> arr)
 	{
 		ArrayList<Intervall> ausgabe = new ArrayList<Intervall>();
@@ -198,13 +189,13 @@ public class Aufgabe6
 				//j wird auf den Vorgaenger gesetzt
 				j=i;
 			}
-		}
-		
-		//Liste wird in ein Arrayuebertragen, dass dann zurueckgegeben wird
+			//assert ausgabeList.get(i).getS
+		}	
 
 		return ausgabeList;
 	}
 
+	//Sortiert die eingelesen Liste
 	public static ArrayList<Intervall> sortStart(ArrayList<Intervall> array)
 	{
 		Collections.sort(array);
@@ -213,24 +204,36 @@ public class Aufgabe6
 
 	public static ArrayList<Intervall> auslesen(RandomAccessFile file)
 	{
+		//String zeile initialisieren
 		String zeile = "";
+		//ausgabe ArrayList erstellen
 		ArrayList<Intervall> speicher = new ArrayList<Intervall>();
 		try{
+			//while Schleife - Reader wirft Exception try bricht die while Schleife ab
 			while(true)
 			{
+				//globale Variable zaehlt die Zeilen
 				ZeilenCount++;
+				//liest die naechste Zeile
 				zeile = file.readLine();
+				//erstellt neues StringTokenizer Objekt, die Tokens werden mit Komma getrennt
 				StringTokenizer st = new StringTokenizer(zeile, ",");
-					int start = Integer.parseInt(st.nextToken());
-					int ende = Integer.parseInt(st.nextToken());
-					Intervall ivall = new Intervall(start, ende);
-					speicher.add(ivall);
+				//erstes Token der Zeile (vor dem Komma)
+				int start = Integer.parseInt(st.nextToken());
+				//zweites Token der Zeile (nach dem Komma)
+				int ende = Integer.parseInt(st.nextToken());
+				//erstellt neues Intervallobjekt
+				Intervall ivall = new Intervall(start, ende);
+				//fuegt das Intervall der Ausgabe ArrayList hinzu
+				speicher.add(ivall);
 			}
+		//faengt die Exception und macht nichts damit (gewollte Exception -> End of file)
 		}catch(Exception e)
 		{
 			
 		}
 		finally{
+			//scliesst den Reader
 			try{
 				file.close();
 			}catch(Exception e)
