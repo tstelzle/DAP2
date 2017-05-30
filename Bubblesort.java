@@ -26,6 +26,7 @@ public class Bubblesort
 			}
 			catch(Exception e){
 				System.out.println("Es wurde keine Zahl eingegeben!");
+				return;
 			}
 		}
 
@@ -36,50 +37,43 @@ public class Bubblesort
 		}
 
 		//Ausgabe der Zeit - nur zur Kontrolle
-		System.out.println("Uebergebenes Argument:" + zeit);
+		System.out.println("Übergebenes Argument: " + zeit);
 
 		//Feld zur Sortierung befuellen
-		int[] tmp = Feld(50000);
+		int[] tmp = Feld(1000);
 
 		//Variablen zur Zeitmessung (msek = uebergebene Zeit als long zum Vergleich)
-		long tStart, tEnd, msec, msek;
-		msek = (long)(zeit *1000);	
-		System.out.println("Uebergebenes Argument als Long:" + msek);
-		
-		if(sortiert(tmp))
-		{
-			System.out.println("Feld Sortiert!");
-		}
-		else{
-			System.out.println("Feld nicht sortiert!");
-		}
-
-		//Bubblesort Ausfuehrung und Zeitmessung
-		tStart = System.currentTimeMillis();
-		bubbleSort(tmp);
-		tEnd = System.currentTimeMillis();
+		long msecInitial, msecArg;
+		msecArg = (long)(zeit *1000);	
+		System.out.println("Übergebenes Argument als Long:" + msecArg);
 		
 		//Berechnung der benoetigten Zeit
-		msec = tEnd - tStart;
+		msecInitial = sortAndTime(tmp);
 		
-		System.out.println("Benoetigte Zeit:" + msec);
-		
+		while(msecInitial < msecArg) {
+			System.out.println("\nFeldlänge: " + tmp.length);
+			System.out.println("Bubblesort war schneller als ihre Eingabe. Es brauchte: " + msecInitial +" Millisekunden");
+			tmp = Feld(tmp.length*2);
+			msecInitial = sortAndTime(tmp);
+		}
+		binarySearch(tmp.length/2, tmp.length, msecArg);
+		/*
 		//Pruefung ob Bubblesort laenger dauerte als die uebergebene Variable (zeit)
-		if(msec < msek)
-		{
-			System.out.println("Bubblesort braucht nicht so lang!");
+		if(msecInitial < msecArg)
+		{	
+			System.out.println("Feldlänge: " + tmp.length);
+			System.out.println("Bubblesort war schneller als ihre Eingabe. Es brauchte: " + msecInitial +" Millisekunden");
+			System.out.println();
+			tmp = Feld(tmp.length * 2);
 		}
 		else{
-			System.out.println("Bubbleosort braucht laenger!");
-		}	
+			System.out.println("Bubblesort brauch länger als ihre Eingabe. Binäre Suche wird jetzt gestartet!");
+			binarySearch((tmp.length / 2), tmp.length, msecArg);
+			System.out.println();
 
-		if(sortiert(tmp))
-		{
-			System.out.println("Feld Sortiert!");
-		}
-		else{
-			System.out.println("Feld nicht sortiert!");
-		}
+		}	
+		*/
+
 	}
 
 	//Methode zum ueberpruefen ob ein Feld aufsteigend sortiert ist
@@ -98,14 +92,47 @@ public class Bubblesort
 	//Methode zum Initialisieren von dem Feld (n ist die groesse des Feldes)
 	public static int[] Feld(int n)
 	{
-		int[] arr = new int[n+1];
-		for(int i=0; i <=n; i++)
+		int[] arr = new int[n];
+		for(int i=0; i < n; i++)
 		{
 			arr[i] = n+1-i;
 		}
 		return arr;
 	}
 	
+	//Algorithmus Binärsuche
+	public static void binarySearch(int lborder, int rborder, long msek)
+	{
+		int mborder = (rborder+lborder)/2;
+		long tStart, tEnd, tduration;
+		int[] tmp = Feld(mborder);
+
+		tStart = System.currentTimeMillis();
+		bubbleSort(tmp);
+		tEnd = System.currentTimeMillis();
+
+		tduration = tEnd - tStart;
+		
+		System.out.println("\nFeldlänge: " + tmp.length);
+		System.out.println("Bubblesort braucht " + tduration + " Millisekunden.");
+		if(tduration - 100 < msek && msek < tduration + 100)
+		{
+			System.out.println("Fertig!");
+			return;
+		}
+		if(tduration < msek)
+		{
+			System.out.println("Bubblesort wird im oberen Bereich des Feldes gestartet!");
+			binarySearch(mborder, rborder, msek);
+		}
+		if(tduration > msek)
+		{
+			System.out.println("Bubblesort wird im unteren Bereich des Feldes gestartet!");
+			binarySearch(lborder, mborder, msek);
+		}	
+
+
+	}
 	//Algorithmus Bubblesort wie im Pseudocode vorgegeben
 	public static void bubbleSort(int[] array)
 	{
@@ -122,5 +149,15 @@ public class Bubblesort
 				}
 			}	
 		}
+	}
+	public static long sortAndTime(int[] tmp)
+	{
+		//Bubblesort Ausfuehrung und Zeitmessung
+		long tStart = System.currentTimeMillis();
+		bubbleSort(tmp);
+		long tEnd = System.currentTimeMillis();
+		
+		//Berechnung der benoetigten Zeit
+		return tEnd - tStart;
 	}
 }
