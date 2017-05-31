@@ -189,7 +189,6 @@ public class Aufgabe6
 				//j wird auf den Vorgaenger gesetzt
 				j=i;
 			}
-			//assert ausgabeList.get(i).getS
 		}	
 
 		return ausgabeList;
