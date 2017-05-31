@@ -40,8 +40,9 @@ class Intervall implements Comparable<Intervall>
 	{
 		String ausgabe = new String("Intervallanfang: " + getStart() + " Intevallende: " + getEnd());
 		return ausgabe;
-	}
-
+	}	
+	
+	//geerbte Klasse von Comparable
 	public int compareTo(Intervall other)
 	{
 		if(this.getEnd() < other.getEnd())
@@ -59,15 +60,18 @@ class Intervall implements Comparable<Intervall>
 	}	
 }
 
+//Klasse Job fuer Augabenteil 2
 class Job implements Comparable<Job> 
 {
 	int[] job;
 
+	//Konstruktor erzeugt einen Job als Feld mit erstem Element Dauer und dem zweiten als Deadline des Prozesses
 	public Job(int dauer, int deadline)
 	{
 		job = new int[] {dauer, deadline};
 	}
-
+	
+	//get-er Methoden
 	public int getDauer()
 	{
 		return job[0];
@@ -78,12 +82,14 @@ class Job implements Comparable<Job>
 		return job[1];
 	}
 
+	//Ausgabe der Jobs
 	public String toString()
 	{
 		String ausgabe = new String("[" + this.getDauer() + "," + this.getDeadline() + "]");
 		return ausgabe;
 	}
 
+	//geerbte Methode von Comparable
 	public int compareTo(Job other)
 	{
 		if(this.getDeadline() < other.getDeadline())
@@ -103,9 +109,12 @@ class Job implements Comparable<Job>
 
 //Die Klasse implementiert den Algorithmus und organisiert das Einlesen und die Ausgabe
 public class Anwendung2
-{
+{	
+	//globale Variablen
+	//Speicherung des Dateinamens und der Anzahl der Zeilen fuer die Ausgabe
 	static String dateiName;
 	static int ZeilenCount;
+	//Speicherung der Verspätung 
 	static int dueCount;
 
 	public static void main(String[] args)
@@ -117,7 +126,8 @@ public class Anwendung2
 			System.exit(0);
 		}
 
-		//einlesen des Dateipfades und pruefen auf Korrektheit
+		//einlesen des Argumente und pruefen auf Korrektheit
+		//und initialisieren der Variablen
 		String dateiPfad = "";
 		RandomAccessFile file = null;
 		String algorithmus = "";
@@ -140,7 +150,7 @@ public class Anwendung2
 			System.exit(0);
 		}
 		
-		//Fals try and catch fehlschlaegt wird hier das Programm abgebrochen (unnoetig)
+		//Fals try and catch fehlschlaegt wird hier das Programm beendet (wird es aber in catch schon)
 		if(dateiPfad.equals(""))
 		{
 			System.exit(0);
@@ -167,7 +177,7 @@ public class Anwendung2
 		int index = dateiPfad.lastIndexOf('/');
 		dateiName = dateiPfad.substring(index+1, dateiPfad.length());
 
-
+		//Auswahl des Algorithmus
 		if(auswahl(algorithmus))
 		{
 			//Datei auslesen
@@ -182,7 +192,7 @@ public class Anwendung2
 			ausgabe(auslesenArr, SortArr, ScheduleArr);
 		}
 		else{
-			//Lateness algorithmus auswertung
+			//Lateness algorithmus (ablauf gleich zu Intervallscheduling)
 			ArrayList<Job> auslesenArr = auslesen2(file);
 			ArrayList<Job> Arr = copy2(auslesenArr);
 			ArrayList<Job> SortArr = sortStart2(Arr);
