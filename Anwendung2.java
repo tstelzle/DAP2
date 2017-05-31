@@ -106,6 +106,7 @@ public class Anwendung2
 {
 	static String dateiName;
 	static int ZeilenCount;
+	static int dueCount;
 
 	public static void main(String[] args)
 	{
@@ -290,6 +291,7 @@ public class Anwendung2
 		System.out.println("");
 		System.out.println("Berechnetes Intervallscheduling:");
 		ArrAusgabe(ScheduleArr);
+
 	}	
 	
 	//Sortiert die eingelesen Liste
@@ -430,14 +432,16 @@ public class Anwendung2
 		System.out.println("");
 		System.out.println("Bearbeite Datei \"" + dateiName + "\".");
 		System.out.println("");
-		System.out.println("Jobs wurden " + ZeilenCount + " Zeilen mit folgendem Inhalt gelesen:");
+		System.out.println("Es wurden " + ZeilenCount + " Zeilen mit folgendem Inhalt gelesen:");
 		ArrAusgabe2(auslesenArr);
 		System.out.println("");
 		System.out.println("Sortiert:");
 		ArrAusgabe2(SortArr);
 		System.out.println("");
-		System.out.println("Berechnetes Jobscheduling:");
+		System.out.println("Berechnetes Latenessscheduling:");
 		ArrAusgabe3(ScheduleArr);
+		System.out.println("");
+		System.out.println("Berechnete maximale Verspätung: " + dueCount);
 	}	
 	
 	//Sortiert die eingelesen Liste
@@ -452,10 +456,18 @@ public class Anwendung2
 	{
 		ArrayList<Integer> speicher = new ArrayList<Integer>();
 		int z=0;
+		dueCount = 0;
 		for(int i=0; i<jobs.size(); i++)
 		{
 			speicher.add(z);
 			z+=jobs.get(i).getDauer();
+			
+			//int x = z - jobs.get(i).getDeadline();
+			int x = Math.abs(z - jobs.get(i).getDeadline());
+			if(x > dueCount)
+			{
+				dueCount = x;
+			}
 			assert (z >= speicher.get(i)) : "Falsch!";
 		}
 		
