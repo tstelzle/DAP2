@@ -3,17 +3,14 @@
 //Autoren: Tarek Stelzle und Frederic Arnold
 
 //import fuer das Einlesen und Auslesen der Datei
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-
-//import fuer LinkedList
-import java.util.*;
+import java.io.RandomAccessFile;
+import java.util.StringTokenizer;
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 //Die Klasse Intervall erstellt ein Objekt welches die Dauer des Prozesses in einem Array angibt.
-class Intervall
+class Intervall implements Comparable<Intervall>
 {
 	int[] bereich;
 
@@ -44,6 +41,22 @@ class Intervall
 		String ausgabe = new String("Intervallanfang: " + getStart() + " Intevallende: " + getEnd());
 		return ausgabe;
 	}
+
+	public int compareTo(Intervall other)
+	{
+		if(this.getEnd() < other.getEnd())
+		{
+			return -1;
+		}
+		else if(this.getEnd() == other.getEnd())
+		{
+			return 0;
+		}
+		else
+		{
+			return +1;
+		}
+	}	
 }
 
 
@@ -53,68 +66,79 @@ public class Anwendung
 	static String dateiName;
 	static int ZeilenCount;
 
-	public Anwendung()
-	{
-
-	}
-
 	public static void main(String[] args)
 	{
 		//einlesen des Dateipfades und pruefen auf Korrektheit
 		String dateiPfad = "";
+		RandomAccessFile file = null;
+
 		try{
 			dateiPfad = args[0];
-			File file = new File(dateiPfad);
-			if(!file.canRead() || !file.isFile())
-			{
-				System.out.println("Datei kann nicht eingelesen werden.");
-				return;
-			}
+			file = new RandomAccessFile(dateiPfad, "r");
 		}catch(Exception e)
 		{
 			System.out.println("Dateipfad existiert nicht.");
-			return;
+			System.exit(0);
 		}
-		
+
 		//Pruefen auf richte Argumenteanzahl
 		if(args.length > 1)
 		{
 			System.out.println("Zu viele Argumente eingegeben.");
-			return;
+			System.exit(0);
 		}
 		
 		//Fals try and catch fehlschlaegt wird hier das Programm abgebrochen (unnoetig)
 		if(dateiPfad.equals(""))
 		{
-			return;
+			System.exit(0);
 		}
+		if(file == null)
+		{
+			System.exit(0);
+		}
+
 
 		//Speicher des Dateinamens
 		int index = dateiPfad.lastIndexOf('/');
 		dateiName = dateiPfad.substring(index+1, dateiPfad.length());
 		//Datei auslesen
-		Intervall[] auslesenArr = auslesen(dateiPfad);
+		ArrayList<Intervall> auslesenArr = auslesen(file);
+		//kopiert die ArrayList auslesenArr (wichtig fuer die Ausgabe)
+		ArrayList<Intervall> Arr = copy(auslesenArr);
 		//Array sortieren
-		Intervall[] SortArr = sortEnd(auslesenArr);	
+		ArrayList<Intervall> SortArr = sortStart(Arr);	
 		//Schedulingalgorithmus anwenden
-		Intervall[] ScheduleArr = intervallScheduling(SortArr);
+		ArrayList<Intervall> ScheduleArr = intervallScheduling(SortArr);
 		//Berechnung ausgeben
 		ausgabe(auslesenArr, SortArr, ScheduleArr);
 	}
 
+	//Kopiert die ArrayList (wichtig fuer die Ausgabe)
+	public static ArrayList<Intervall> copy(ArrayList<Intervall> arr)
+	{
+		ArrayList<Intervall> ausgabe = new ArrayList<Intervall>();
+		for(int i=0; i<arr.size(); i++)
+		{
+			ausgabe.add(arr.get(i));
+		}
+
+		return ausgabe;
+	}
+
 	//Methode zur Ausgabe eines Array
-	public static void ArrAusgabe(Intervall[] arr)
+	public static void ArrAusgabe(ArrayList<Intervall> arr)
 	{
 		System.out.print("[");
-		for(int i=0; i<arr.length; i++)
+		for(int i=0; i<arr.size(); i++)
 		{
-			if(i != arr.length-1)
+			if(i != arr.size()-1)
 			{	
-				System.out.print(arr[i].toString());
+				System.out.print(arr.get(i).toString());
 				System.out.print(", ");
 			}
 			else{
-				System.out.print(arr[i].toString());
+				System.out.print(arr.get(i).toString());
 			}	
 		}
 		System.out.println("]");
@@ -122,11 +146,12 @@ public class Anwendung
 	}
 	
 	//Methode zur Ausgabe, die in der Aufgabenstellung vorgegeben war
-	public static void ausgabe(Intervall[] auslesenArr, Intervall[] SortArr, Intervall[] ScheduleArr)
+	public static void ausgabe(ArrayList<Intervall> auslesenArr, ArrayList<Intervall> SortArr, ArrayList<Intervall> ScheduleArr)
 	{
+		System.out.println("");
 		System.out.println("Bearbeite Datei \"" + dateiName + "\".");
 		System.out.println("");
-		System.out.println("Es wurden " + ZeilenCount + " mit folgendem Inhalt gelesen:");
+		System.out.println("Es wurden " + ZeilenCount + " Zeilen mit folgendem Inhalt gelesen:");
 		ArrAusgabe(auslesenArr);
 		System.out.println("");
 		System.out.println("Sortiert:");
@@ -137,14 +162,14 @@ public class Anwendung
 	}	
 
 	//Algorithmus zum Intervallscheduling, der in der Vorlesung vorgegeben wurde
-	public static Intervall[] intervallScheduling(Intervall[] intervalls)
+	public static ArrayList<Intervall> intervallScheduling(ArrayList<Intervall> intervalls)
 	{
 		//erstellen einer Liste, zur Speicherung der gewaehlten Prozesse (einfacher als Array)
-		LinkedList<Intervall> ausgabeList = new LinkedList<Intervall>();
+		ArrayList<Intervall> ausgabeList = new ArrayList<Intervall>();
 		//Abbruch fuer die Vorschleife
-		int n = intervalls.length;
+		int n = intervalls.size();
 		//erstes Element wird in die Liste eingefuegt, da das Array schon sortiert ist
-		ausgabeList.add(intervalls[0]);
+		ausgabeList.add(intervalls.get(0));
 		//Variable j wird initialisiert
 		int j=0;
 
@@ -153,128 +178,66 @@ public class Anwendung
 		{
 			//Falls der Anfangswert des Vorgaengers groesser gleich dem Endwert des Nachfolgers ist, 
 			//wird der Prozess mit dem Anfangswert in die Liste aufgenommen
-			if(intervalls[i].getStart() >= intervalls[j].getEnd())
+			if(intervalls.get(i).getStart() >= intervalls.get(j).getEnd())
 			{
-				ausgabeList.add(intervalls[i]);
+				ausgabeList.add(intervalls.get(i));
 				//j wird auf den Vorgaenger gesetzt
 				j=i;
 			}
-		}
-		
-		//Liste wird in ein Arrayuebertragen, dass dann zurueckgegeben wird
-		int k=0;
-		Intervall[] ausgabe = new Intervall[ausgabeList.size()];
+			//assert ausgabeList.get(i).getS
+		}	
 
-		while(k < ausgabeList.size())
-		{
-			ausgabe[k] = ausgabeList.get(k);
-			k++;
-		}
-
-		return ausgabe;
-	}
-	
-	//Sortieren des Arrays mit Bubblesort
-	public static Intervall[] sortEnd(Intervall[] intervalls)
-	{
-		int k=intervalls.length;
-		while(k>0)
-		{
-			for(int i=1; i<intervalls.length;i++)
-			{
-				if(intervalls[i-1].getEnd() > intervalls[i].getEnd())
-				{	
-					Intervall tmp = intervalls[i-1];
-					intervalls[i-1] = intervalls[i];
-					intervalls[i] = tmp;
-				}
-			}
-		k = k-1;
-		}
-
-		return intervalls;
+		return ausgabeList;
 	}
 
-	//Auslesend der Datei
-	public static Intervall[] auslesen(String dateipfad)
+	//Sortiert die eingelesen Liste
+	public static ArrayList<Intervall> sortStart(ArrayList<Intervall> array)
 	{
-		//Zeilensaehler (wichtig fuer die Ausgabe)
-		int count = 0;
+		Collections.sort(array);
+		return array;
+	}
 
-		//erstellen einer Liste fuer die ausgelesenen Zeilen
-		LinkedList<Intervall> liste = new LinkedList<Intervall>();
-	
-		//Ausleser initialiseren
-		BufferedReader in = null;
+	public static ArrayList<Intervall> auslesen(RandomAccessFile file)
+	{
+		//String zeile initialisieren
+		String zeile = "";
+		//ausgabe ArrayList erstellen
+		ArrayList<Intervall> speicher = new ArrayList<Intervall>();
 		try{
-			//Versuch den Ausleser zu erstellen
-			in = new BufferedReader(new FileReader(dateipfad));
-			//Variable fuer die naechste Zeile initialisieren
-			String zeile = null;
-			//Auslesen der Zeilen nacheinander, solange bis einen null ist
-			while((zeile = in.readLine()) != null)
+			//while Schleife - Reader wirft Exception try bricht die while Schleife ab
+			while(true)
 			{
-				//Zeilenzaehler wird um eins erhoeht
-				count++;
-				//Initialisieren von 2 Strings
-				String Zeins = "";
-				String Zzwei = "";
-
-				int x = zeile.indexOf(",");
-				
-				//Initialisieren von 2 String, fuer den Anfangs- und Endwert des Prozess
-				Zeins = zeile.substring(0, x);
-				Zzwei = zeile.substring(x+1, zeile.length());
-				
-				int Start = 0;
-				int End = 0;
-				//Versuch die Strings in Ints umzuwandeln
-				try{
-					Start = Integer.parseInt(Zeins);
-					End = Integer.parseInt(Zzwei);
-				}catch (Exception e)
-				{
-					System.out.println("Hier sollte eine Zahl stehen.");
-					return null;
-				}
-				
-				//neues Intervall mit den 2 Ints erstellen
-				Intervall lesen = new Intervall(Start, End);
-				//Intervall der Liste hinzufuegen
-				liste.add(lesen);
-			}	
-		}catch(IOException e){
-			e.printStackTrace();
-		}
-		finally
+				//globale Variable zaehlt die Zeilen
+				ZeilenCount++;
+				//liest die naechste Zeile
+				zeile = file.readLine();
+				//erstellt neues StringTokenizer Objekt, die Tokens werden mit Komma getrennt
+				StringTokenizer st = new StringTokenizer(zeile, ",");
+				//erstes Token der Zeile (vor dem Komma)
+				int start = Integer.parseInt(st.nextToken());
+				//zweites Token der Zeile (nach dem Komma)
+				int ende = Integer.parseInt(st.nextToken());
+				//erstellt neues Intervallobjekt
+				Intervall ivall = new Intervall(start, ende);
+				//fuegt das Intervall der Ausgabe ArrayList hinzu
+				speicher.add(ivall);
+			}
+		//faengt die Exception und macht nichts damit (gewollte Exception -> End of file)
+		}catch(Exception e)
 		{
-			//insofern der Ausleser noch nicht geschlossen wurde, wird er hier geschlossen
-			if(in != null)
+			
+		}
+		finally{
+			//scliesst den Reader
+			try{
+				file.close();
+			}catch(Exception e)
 			{
-				try{
-					in.close();
-				}
-				catch(IOException e){
-
-				}
+				System.out.println("Reader konnte nicht geschlossen werden");
+				System.exit(0);
 			}
 		}
-			
-
-		//Umschreiben der Liste in ein Array
-		Intervall[] ausgabe = new Intervall[liste.size()];
-
-		int i=0;
-		while(i < liste.size())
-		{
-			ausgabe[i] = liste.get(i);
-			i++;
-		}
 		
-		//globale Variable auf Zeilenzaehler setzen
-		ZeilenCount = count;
-		//Rueckgabe des Arrays
-		return ausgabe;
-		
+		return speicher;
 	}
 }
