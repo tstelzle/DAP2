@@ -471,8 +471,7 @@ public class Anwendung2
 			speicher.add(z);
 			z+=jobs.get(i).getDauer();
 			
-			//int x = z - jobs.get(i).getDeadline();
-			int x = Math.abs(z - jobs.get(i).getDeadline());
+			int x = z - jobs.get(i).getDeadline();
 			if(x > dueCount)
 			{
 				dueCount = x;
