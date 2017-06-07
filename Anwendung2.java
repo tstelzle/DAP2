@@ -164,11 +164,8 @@ public class Anwendung2
 			System.out.println("Algorithmus konnte nicht eingelesen werden.");
 			System.exit(0);
 		}
-		if(algorithmus.equals("Interval") || algorithmus.equals("Lateness"))
+		if(!(algorithmus.equals("Interval") || algorithmus.equals("Lateness")))
 		{
-			
-		}
-		else{
 			System.out.println("Algorithmus nicht bekannt.");
 			System.exit(0);
 		}
@@ -326,7 +323,7 @@ public class Anwendung2
 		//Die for-Schleife durchlauft das Array
 		for(int i=1; i< n; i++)
 		{
-			assert (i<n) : "Falsch!";
+			assert (i<n) : "Falsch! i ist zu groß! (in intervallScheduling)";
 			//Falls der Anfangswert des Vorgaengers groesser gleich dem Endwert des Nachfolgers ist, 
 			//wird der Prozess mit dem Anfangswert in die Liste aufgenommen
 			if(intervalls.get(i).getStart() >= intervalls.get(j).getEnd())
