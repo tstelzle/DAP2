@@ -1,4 +1,3 @@
-package Blatt8;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,6 +7,11 @@ import java.util.*;
 
 public class EditDistance {
 
+	public EditDistance()
+	{
+
+	}
+
 	public static void main(String[] args)
 	{	
 		//Strings initialisieren
@@ -15,10 +19,10 @@ public class EditDistance {
 		String b = null;
 		String dateiPfad = null;
 		
-		//Prüfung auf nur ein Argument
+		//Pruefung auf nur ein Argument
 		if(args.length == 1)
 		{
-			//Dateipfad einlesen und Datei auf Korrektheit prüfen
+			//Dateipfad einlesen und Datei auf Korrektheit pruefen
 			try{
 				dateiPfad = args[0];
 				File file = new File(dateiPfad);
@@ -34,7 +38,7 @@ public class EditDistance {
 			//Wenn eine Datei eingelesen wurde wird hier der Algorithmus auf diese aufgerfufen
 			if(dateiPfad != null)
 			{
-				//auslesen gibt eine LinkedList mit den einzelnen Strings zurück
+				//auslesen gibt eine LinkedList mit den einzelnen Strings zurueck
 				LinkedList<String> text = auslesen(dateiPfad);
 				for(int x=0; x<text.size(); x++)
 				{
@@ -62,7 +66,7 @@ public class EditDistance {
 				System.exit(0);
 			}
 			
-			//Wenn Strings eingelesen wurden wird die Levenshtein Distanz darauf ausgeführt
+			//Wenn Strings eingelesen wurden wird die Levenshtein Distanz darauf ausgefuehrt
 			if(a != null && b != null)
 			{
 				System.out.println("Distanz: " + distance(a,b));
@@ -82,7 +86,7 @@ public class EditDistance {
 	//Methode welche die Levenshtein Distanz berechnet
 	public static int distance(String eins, String zwei)
 	{	
-		//Strings werden uebergeben und als Präfix wird noch das leere Wort angehängt
+		//Strings werden uebergeben und als Praefix wird noch das leere Wort angehaengt
 		String a = " ";
 		String b = " ";
 		a = a.concat(eins);
@@ -91,7 +95,7 @@ public class EditDistance {
 		//die Matrix zum Zwischenspeichern der Werte wird erstellt
 		int[][] dist = new int[a.length()][b.length()];
 		
-		//initialisieren aller Werte auf -1, um nachher zu prüfen ob der Algorithmus über alle Felder lief
+		//initialisieren aller Werte auf -1, um nachher zu pruefen ob der Algorithmus ueber alle Felder lief
 		for(int p = 0; p<dist.length; p++)
 		{
 			for(int o=0; o<dist[p].length; o++)
@@ -105,16 +109,16 @@ public class EditDistance {
 		{
 			for(int k=0; k<dist[i].length; k++)
 			{
-				//Variable zur Aufrechnung auf die Veränderungen
+				//Variable zur Aufrechnung auf die Veraenderungen
 				int konst  = 1;
 				
-				//Wenn die Chars an der Position gleich sind wird die Variable auf 0 gesetzt, da nicht verändert werden muss
+				//Wenn die Chars an der Position gleich sind wird die Variable auf 0 gesetzt, da nicht veraendert werden muss
 				if(a.charAt(i) == b.charAt(k))
 				{
 					konst = 0;
 				}
 				
-				//Prüfung auf i=0 und k=0 weil ansonsten die for-Schleifen aus der Matrix rauslaufen können
+				//Pruefung auf i=0 und k=0 weil ansonsten die for-Schleifen aus der Matrix rauslaufen koennen
 				if(i == 0)
 				{
 					if(k == 0)
@@ -142,7 +146,7 @@ public class EditDistance {
 			assert checker(dist[i]) : "Ein Array Platz wurde nicht gefuellt!";
 		}
 		
-		//"rechts unten" der Matrix wird zurückgegeben 
+		//"rechts unten" der Matrix wird zurueckgegeben 
 		return dist[dist.length-1][dist[a.length()-1].length-1];
 	}
 	
@@ -190,7 +194,7 @@ public class EditDistance {
 				}
 			}
 		}
-		//LinkedList mit den Strings wird zurückgegeben
+		//LinkedList mit den Strings wird zurueckgegeben
 		return speicher;
 	}
 }
