@@ -132,6 +132,18 @@ public class EditDistance {
 		}
 	}
 	
+	public static void printMatrix(int[][] matrix)
+	{
+		for(int i=0; i<matrix.length; i++)
+		{
+			for(int j=0;j<matrix[i].length; j++)
+			{
+				System.out.print(matrix[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
+	
 	//Methode welche die Levenshtein Distanz berechnet
 	public static int distance(String eins, String zwei)
 	{	
@@ -142,7 +154,7 @@ public class EditDistance {
 		b = b.concat(zwei);
 		
 		//die Matrix zum Zwischenspeichern der Werte wird erstellt
-		dist = new int[a.length()][b.length()];
+		dist = new int[b.length()][a.length()];
 		
 		//initialisieren aller Werte auf -1, um nachher zu pruefen ob der Algorithmus ueber alle Felder lief
 		for(int p = 0; p<dist.length; p++)
@@ -162,7 +174,7 @@ public class EditDistance {
 				int konst  = 1;
 				
 				//Wenn die Chars an der Position gleich sind wird die Variable auf 0 gesetzt, da nicht veraendert werden muss
-				if(a.charAt(i) == b.charAt(k))
+				if(b.charAt(i) == a.charAt(k))
 				{
 					konst = 0;
 				}
@@ -183,9 +195,10 @@ public class EditDistance {
 					dist[i][k] = dist[i-1][k]+konst;
 				}
 				//Wenn die Buchstaben gleich sind wird hier nochmal bei i!=0 und k!=0 der neue Wert gespeichert
-				else if(a.charAt(i) == b.charAt(k))
+				else if(b.charAt(i) == a.charAt(k))
 				{
-					dist[i][k] = Math.min(Math.min(dist[i][k-1], dist[i][k-1]), dist[i-1][k-1]);
+					dist[i][k] = dist[i-1][k-1];
+					//dist[i][k] = Math.min(Math.min(dist[i][k-1], dist[i][k-1]), dist[i-1][k-1]);
 				}
 				//Wert wird bei Ungleichheit der Werte und bei i!=0 und k!=0 gespeichert
 				else{
@@ -195,6 +208,7 @@ public class EditDistance {
 			assert checker(dist[i]) : "Ein Array Platz wurde nicht gefuellt!";
 		}
 		
+		printMatrix(dist);
 		//"rechts unten" der Matrix wird zurueckgegeben 
 		return dist[dist.length-1][dist[a.length()-1].length-1];
 	}
