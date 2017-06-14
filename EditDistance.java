@@ -82,6 +82,7 @@ public class EditDistance {
 					System.out.println("Dateipfad konnte nicht eingelesen werden.");
 					System.exit(0);
 				}
+				System.out.println("Diese Funktion ist noch nicht vorhanden.");
 				// TODO Ausgabe der Datei mit printEditOperations
 			}
 			else{
@@ -165,6 +166,8 @@ public class EditDistance {
 			}
 		}
 		
+		// TODO Besser Kommentare: Beschreiben wo Ersetzen, Loeschen und Anfuegen ist
+
 		//Die Matrix wird mit zwei For-Schleifen durchlaufen
 		for(int i = 0; i<dist.length; i++)
 		{
@@ -198,19 +201,19 @@ public class EditDistance {
 				else if(b.charAt(i) == a.charAt(k))
 				{
 					dist[i][k] = dist[i-1][k-1];
-					//dist[i][k] = Math.min(Math.min(dist[i][k-1], dist[i][k-1]), dist[i-1][k-1]);
 				}
 				//Wert wird bei Ungleichheit der Werte und bei i!=0 und k!=0 gespeichert
 				else{
-					dist[i][k] = Math.min(Math.min(dist[i][k-1] +1, dist[i-1][k]+1), dist[i-1][k-1]+1);
+					dist[i][k] = Math.min(Math.min(dist[i][k-1], dist[i-1][k]), dist[i-1][k-1])+1;
 				}
 			}
 			assert checker(dist[i]) : "Ein Array Platz wurde nicht gefuellt!";
 		}
 		
+		//Ausgabe der Matrix zur Fehlerüberprüfung
 		printMatrix(dist);
 		//"rechts unten" der Matrix wird zurueckgegeben 
-		return dist[dist.length-1][dist[a.length()-1].length-1];
+		return dist[dist.length-1][dist[b.length()-1].length-1];
 	}
 
 	public static void printListe(LinkedList<String> liste)
