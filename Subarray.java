@@ -22,7 +22,7 @@ public class Subarray {
 		
 		if(n == 0)
 		{
-			System.out.println("LÃ¤nge ist null! - Denk nochmal nach!");
+			System.out.println("Länge ist null! - Denk nochmal nach!");
 			System.exit(0);
 		}
 
@@ -153,8 +153,8 @@ public class Subarray {
 		int n = arr.length +1;
 		int[][] summe = new int[n][n];
 		summe[0][0] = 0;
-		int[] links = new int[n];
-		int[] rechts = new int[n];
+		int[][] links = new int[n][n];
+		int[][] rechts = new int[n][n];
 		int sum = 0;
 		int s = 0;
 		int e = arr.length -1;
@@ -198,7 +198,7 @@ public class Subarray {
 		}
 		
 
-		// TODO Fehler, wenn in arr "both" die ersten 2 Werte negativ sind und der letzte positive gibt er was falsches aus
+		// TODO Fehler, wenn in arr "both" der erste Wert negativ ist
 		if(pos == false && neg == false)
 		{
 			sum = 0;
@@ -211,28 +211,58 @@ public class Subarray {
 						if(arr[j] > 0)
 						{
 							summe[i][j] = arr[j];	
-							links[i] = j;
-							rechts[j] = j;
+							links[i][j] = j;
+							rechts[i][j] = j;
 						}
 						else
 						{
 							summe[i][j] = 0;
-							links[i] = j;
-							rechts[j] = j;
+							links[i][j] = j;
+							rechts[i][j] = j;
 						}
 					}
 					else
 					{
-						summe[i][j]  = summe[i][j-1] + arr[j];
-						if(i == 0)
+						/*
+						if(summe[i][j-1] == 0)
 						{
-							links[i] = 0;
+							summe[i][j] = arr[j];
+							links[i][j] = j;
+							rechts[i][j] = j;
+							
 						}
-						else
-						{
-							links[i] = links[i-1];
-						}
-						rechts[j] = rechts[j-1] + 1;
+						else{
+						*/
+							if(summe[i][j-1] + arr[j] <= summe[i][j-1])
+							{
+								summe[i][j]  = 0;
+								links[i][j] = j;
+								rechts[i][j] = j;
+								/*
+								if(i == 0)
+								{
+									links[i][j] = 0;
+								}
+								else
+								{
+									links[i][j] = links[i][j-1];
+								}
+								rechts[i][j] = rechts[i][j-1] + 1;
+								*/
+							}
+							else{
+								summe[i][j]  = summe[i][j-1] + arr[j];
+								if(i == 0)
+								{
+									links[i][j] = 0;
+								}
+								else
+								{
+									links[i][j] = links[i][j-1];
+								}
+								rechts[i][j] = rechts[i][j-1] + 1;
+							}
+						//}
 					}
 				}
 			}
@@ -244,8 +274,8 @@ public class Subarray {
 					if(sum < summe[i][j])
 					{
 						sum = summe[i][j];
-						s = links[i]; 
-						e = rechts[j];
+						s = links[i][j]; 
+						e = rechts[j][j];
 					}
 				}
 			}
