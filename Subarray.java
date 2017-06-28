@@ -146,7 +146,7 @@ public class Subarray {
 		//Durchlaufen des Arrays
 		for(int i=1; i<n+1; i++)
 		{
-			// Erster Fall, vorherige Summe ist gleich null, daraus folgt negativer Wert oder erstes Feld 
+			// Erster Fall, vorherige Summe ist gleich NULL, daraus folgt negativer Wert oder erstes Feld 
 			if(summe[i-1] == null)
 			{
 				//Wenn die Wert groesser null ist, wird das Summenfeld und die Grenzen neu gesetze auf diesen einen Wert
@@ -163,12 +163,12 @@ public class Subarray {
 					rechts[i] = i;
 				}
 			}
-			//Wenn die Zahl davor schon negativ war, soll das Feld nicht noch kleiner werden
-			else if(summe[i-1] + arr[i-1] <= arr[i-1])
+			//Wenn die vorherige Summe mit dem akutellen Feld kleiner ist als die vorherige Summe => negative Zahl => aktuelle Summe wir auf NULL gesetzt 
+			else if(summe[i-1] + arr[i-1] < summe[i-1])
 			{
 				links[i] = i-1;
 				rechts[i] = i-1;
-				summe[i] = arr[i-1];
+				summe[i] = null;
 			}
 			
 			// Ansonsten wird die aktuelle Zahl in die Summe mit aufgenommen und die Grennzen werden angepasst
@@ -218,18 +218,13 @@ public class Subarray {
 
 	public static void naiv(int[] arr)
 	{
-		//Felder und Variablen werden deklariert
-		int n = arr.length;
-		Integer[][] summe = new Integer[n][n];
-		summe[0][0] = 0;
-		int[][] links = new int[n][n];
-		int[][] rechts = new int[n][n];
-		int sum = 0;
-		int s = 0;
-		int e = arr.length -1;
+		int asum = 0;
+		int msum = 0;
+		int links = 0;
+		int rechts = 0;
 		boolean pos = true;
 		boolean neg = true;
-
+	
 		//Ueberpruefung ob alle Zahlen negativ oder positiv sind
 		for(int i=0; i<arr.length; i++)
 		{
@@ -248,105 +243,57 @@ public class Subarray {
 		{
 			for(int i = 0; i<arr.length; i++)
 			{
-				sum += arr[i];
+				msum += arr[i];
 			}
+			rechts = arr.length -1;
 		}
 
 		if(pos)
 		{
-			sum  = arr[0];
-			e = 0;
+			msum  = arr[0];
 
 			for(int i = 1; i<arr.length; i++)
 			{
-				if(sum < arr[i])
+				if(msum < arr[i])
 				{
-					sum = arr[i];
-					s = e = i;
+					msum = arr[i];
+					links = rechts = i;
 				}
 			}
 		}
-		
-		//Wenn sowohl negativ als auch positive Zahlen vorhanden sind
+
 		if(pos == false && neg == false)
 		{
-			//Durchlaufen aller moeglichen Subarraykombinationen mit zwei For-Schleifen 
+			//Erste For-Schleife fuer die linke Grenze
 			for(int i=0; i<arr.length; i++)
-			{
-				for(int j=0; j<arr.length; j++)
+			{	
+				//aktuelle Summe wird auf 0 gesetzt;
+				asum = 0;
+
+				//Zweite For-Schleife fuer die rechte Grenze
+				for(int j=i; j<arr.length; j++)
 				{		
-					//Wenn wir in der ersten Spalte sind, kann er nicht auf den Vorgaenger zugreifen, deswegen braucht man einen Sonderfall
-					if(j == 0)
+					//Wenn der aktuelle Wert groesser null ist
+					if(arr[j] >= 0)
 					{
-						//Wenn die Zahl in arr[0] groesser 0 ist (positiv) ist das die neue Summe
-						if(arr[j] >= 0)
+						//aktuelle Summe wir um das Arrayfeld erhöht
+						asum += arr[j];
+						//Wenn die aktuelle Summe groesser als die maximale Summe wird die msum verändert und die Grenzen angepasst
+						if(asum > msum)
 						{
-							summe[i][j] = arr[j];	
-							links[i][j] = j;
-							rechts[i][j] = j;
-						}
-						//ansonsten ist sie kleiner null, deswegen wir die Summe auf null gesetzt
-						else
-						{
-							summe[i][j] = null;
-							links[i][j] = 0;
-							rechts[i][j] = 0;
+							msum = asum;
+							links = i;
+							rechts = j;					
 						}
 					}
-					//Zeiger ist nicht in der ersten Spalte
-					else
-					{
-						//Zahl davor war null, Summe ist gleich null			
-						if(summe[i][j-1] == null)
-						{
-							if(arr[j] < 0)
-							{
-								summe[i][j] = null;
-								links[i][j] = 0;
-								rechts[i][j] = 0;
-							}
-							else{
-								summe[i][j] = arr[j];
-								links[i][j] = j;
-								rechts[i][j] = j;
-							}
-						}
-						//Summe mit jetziger Zahl ist kleiner als Summe davor, d.h. Zahl ist negativ
-						else if(summe[i][j-1] + arr[j] < summe[i][j-1])
-						{
-							summe[i][j]  = null;
-							links[i][j] = j;
-							rechts[i][j] = j;
-						}
-						//Ansonsten ist die Zahl positiv und die Summe davor war positiv, d.h. Subarray wird erweitert
-						else{
-							summe[i][j]  = summe[i][j-1] + arr[j];
-							links[i][j] = links[i][j-1];
-							rechts[i][j] = rechts[i][j-1] + 1;
-						}
-					}
-				}
-			}
-			
-			//Maximum wird gesucht und die Grenzen werden passend dazu gespeichert
-			for(int i=0; i<summe.length; i++)
-			{
-				for(int j=0; j<summe[i].length; j++)
-				{
-					if(summe[i][j] == null)
-					{
-							
-					}
-					else if(sum < summe[i][j])
-					{
-						sum = summe[i][j];
-						s = links[i][j]; 
-						e = rechts[j][j];
+					//bei einem negativen Wert wird die linke Grenze neu gesetzt
+					else{
+						break;
 					}
 				}
 			}
 		}
-		//Ausgabe der Loesung
-		System.out.print("Linke Grenze: " + s + ", Rechte Grenze: " + e + ", Gesamtsumme: " + sum);
-	}
+		//Ausgabe der Lösung
+		System.out.print("Linke Grenze: " + links + ", Rechte Grenze: " + rechts + ", Gesamtsumme: " + msum);
+	}	
 }
