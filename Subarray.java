@@ -87,7 +87,7 @@ public class Subarray {
 		long tStart = System.currentTimeMillis();
 		naiv(arr);
 		long tEnd = System.currentTimeMillis();
-		System.out.println(", Dauer: " + (tEnd - tStart));
+		System.out.println(", Dauer: " + (tEnd - tStart) + "ms");
 	}
 	
 	//Methode welche den nicht naiven Algorithmus auf das Feld ausfuehrt und eine Zeitmessung vornimmt
@@ -96,7 +96,7 @@ public class Subarray {
 		long tStart = System.currentTimeMillis();
 		notNaiv(arr);
 		long tEnd = System.currentTimeMillis();
-		System.out.println(", Dauer: " + (tEnd - tStart));
+		System.out.println(", Dauer: " + (tEnd - tStart) + "ms");
 
 	}
 		
