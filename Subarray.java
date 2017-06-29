@@ -64,35 +64,6 @@ public class Subarray {
 		zeitMessungNaiv(both);
 	}
 	
-	//Methode zur Ausgabe einer int Matrix -- Ueberpruefung der Korrektheit
-	public static void printArrArr(int[][] arr)
-	{
-		for(int i=0; i<arr.length; i++)
-		{
-			for(int j=0; j<arr[i].length; j++)
-			{
-				System.out.print(arr[i][j] + " ");
-			}
-			System.out.println("");
-		}
-	System.out.println("");
-	}
-	
-	//Methode zur Ausgabe einer Integer Matrix -- Ueberpruefung der Korrektheit
-	public static void printArrArr(Integer[][] arr)
-	{
-		for(int i=0; i<arr.length; i++)
-		{
-			for(int j=0; j<arr[i].length; j++)
-			{
-				System.out.print(arr[i][j] + " ");
-			}
-			System.out.println("");
-		}
-	System.out.println("");
-
-	}
-	
 	//Methode zur Ausgabe der Testfelder
 	public static void printArr(int[] arr)
 	{
