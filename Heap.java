@@ -1,139 +1,135 @@
-public class Heap {
-	
+public class Heap
+{
 	public int[] heap;
 	public int heapSize;
-	
+
 	public Heap(int n)
 	{
-		heapSize = n;
-		heap = new int[heapSize];
+		if(n >= 0)
+		{
+			heap = new int[n+1];
+			heapSize = 0;
+			heap[0] = 0;
+		}
 	}
-
+	
 	public static void main(String[] args)
 	{
-		int n = 0;
-		try{
-			n = Integer.parseInt(args[0]);
-		}
-		catch(Exception e)
-		{
-			System.out.println("Zahl konnte nicht eingelesen werden.");
-			System.exit(0);
-		}
-
-		if(n == 0)
-		{
-			System.out.println("Der Baum ist leer.");
-			System.exit(0);
-		}
-
-		Heap h = new Heap(n);
-		h.insert(3);
+		Heap h = new Heap(100);
 		h.insert(4);
-		h.insert(1);
-		h.insert(7);
-
-		//printArr(arr);
 		h.printHeap();
+		h.insert(3);
+		h.printHeap();
+		h.insert(5);
+		//h.heapify(1);
+		h.printHeap();
+		h.insert(1);
+		//h.heapify(1);
+
+		h.heapify(2);
+		h.printHeap();
+	}
+
+	public int getHeapSize()
+	{
+		return heapSize;
 	}
 	
 	public int left(int i)
 	{
-		return heap[2*i+1];		
+		return 2*i;
 	}
-	
-	public int parent(int i)
-	{
-		return heap[(i-1)/2];	
-	}
-	
+
 	public int right(int i)
 	{
-		return heap[2*i+2];	
+		return 2*i+1;
 	}
 
-	public void heapify(int i)
+	public int parent(int i)
 	{
-		if(right(i) > i && left(i) > parent(i))
-		{
-
-		}
-		else{
-				change(i, parent(i));
-		}
+		return i/2;
 	}
-	
+
 	public void insert(int key)
 	{
-		int i = 0;
-		while(i < heap.length)
+		if(getHeapSize() + 1 < heap.length)
 		{
-			if(heap[i] < key)
+			heapSize += 1;
+			heap[heapSize] = key;
+			int current = heapSize;
+			boolean stop = (current == 1);
+			while(!stop)
 			{
-				change(i, key);
-				i = heap.length;
-				//System.out.println("einfuegen");
+				int  parent = parent(current);
+				if(parent > 0 && heap[current] < heap[parent])
+				{
+					swap(current, parent);
+					current = parent;
+				}
+				else{
+					stop = true;
+				}
 			}
-			//System.out.println("Schleife insert");
-			i++;
-			heapify(i);
 		}
 	}
 	
 	public int extractMax()
 	{
-		return 0;		
+		return heap[getHeapSize()];
 	}
 	
 	public void printHeap()
 	{
-		/*
-		int p = 1;
-
-		for(int i=0; i < p ; i++ 
-		*/
-
-		int i = 0; 
-		int p = 1;
-		while(i < heap.length)
+		for(int i=1; i<=heapSize; i++)
 		{
-			while(i < p && i < heap.length)
-			{
-				System.out.print(heap[i] + " ");
-				i++;
-			}
-			i = p;
-			p = 2*p;
-			System.out.println();
+			System.out.print(heap[i] + " ");
 		}
-
+		System.out.println();
 	}
 
-	public void change(int i, int key)
+	public void heapify(int i)
 	{
-		int tmp = 0;
-		while(i<heap.length)
+		int current = i;
+		int leftChild, rightChild, largerChild;
+		boolean stop = false;
+		while(!stop)
 		{
-			tmp = heap[i];
-			heap[i] = key;
-			key = tmp;
-			i++;
-		}
-	}
-
-	public void printArr(int[] arr)
-	{
-		System.out.print("[");
-		for(int i=0; i<arr.length; i++)
-		{
-			if(i == arr.length -1)
+			leftChild = left(current);
+			rightChild = right(current);
+			if(leftChild <= heapSize)
 			{
-				System.out.println(arr[i] + "]");
+				if(rightChild <= heapSize)
+				{
+					if(heap[rightChild] < heap[leftChild])
+					{
+						largerChild = rightChild;
+					}
+					else{
+						largerChild = leftChild;
+					}
+				}
+				else{
+					largerChild = leftChild;
+				}
+				if(heap[largerChild] < heap[current])
+				{
+					swap(current, largerChild);
+					current = largerChild;
+				}
+				else{
+					stop = true;
+				}
 			}
 			else{
-				System.out.print(arr[i] + ", ");
+				stop = true;
 			}
 		}
 	}
 
+	public void swap(int i, int j)
+	{
+		int tmp = heap[i];
+		heap[i] = heap[j];
+		heap[j] = tmp;
+	}
 }
