@@ -6,10 +6,24 @@ public class Graph extends Node
 {
 	public ArrayList<Node> nodes;
 
+	//ich glaub die ArrayList sollte woanderst initialisiert werden
+	public Graph()
+	{
+		nodes = new ArrayList<Node>();
+	}
+
 	public static void main(String[] args)
 	{
 		String dateiPfad = "";
-		RandomAccessfile = null;
+		try{
+			dateiPfad = args[0];
+		}
+		catch(Exception e)
+		{
+			System.out.println("Argument konnte nich eingelesen werden.");
+			System.exit(0);
+		}
+		Graph g = fromFile(dateiPfad);
 	}
 
 	public boolean contains(int id)
@@ -45,6 +59,7 @@ public class Graph extends Node
 		return null;
 	}
 
+	//die stimmt noch nicht
 	public void addEdge(int src, int dst)
 	{
 		Node n = new Node(src);
@@ -54,19 +69,34 @@ public class Graph extends Node
 
 	public static Graph fromFile(String filepath)
 	{
+		RandomAccessFile file = new RandomAccessFile(filepath, "r");
 		String zeile = "";
-		nodes = new ArrayList<Node>();
+		//nodes = new ArrayList<Node>();
 
 		try{
+			//kein schoener Stil - hier sollte nicht while(true) udn auch nicht try ... catch stehen
 			while(true)
 			{
 				zeile = file.readLine();
 				StringTokenizer st = new StringTokenizer(zeile, ",");
-				Node src = new Node(st.nextToken());
-				Node dst = new Node(st.nextToken());
-				nodes.add(src);
-				nodes.add(dst);
-				addEdge(dst, src);
+				Node src = null;
+				Node dst = null;
+				try{
+					src = new Node(Integer.parseInt(st.nextToken()));
+					dst = new Node(Integer.parseInt(st.nextToken()));
+				}
+				catch(Exception e)
+				{
+					System.out.println("Node konnte nicht erstellt werden.");
+					System.exit(0);
+				}
+				if(src != null && dst != null)
+				{
+					//anscheinend ist die ArrayList static ... 
+					nodes.add(src);
+					nodes.add(dst);
+					addEdge(dst, src);
+				}
 
 			}
 		}
