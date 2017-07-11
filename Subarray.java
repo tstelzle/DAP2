@@ -22,11 +22,13 @@ public class Subarray {
 		}
 		
 		//Falls kein Paramtere eingelesen wurder, oder der Paramter 0 ist wird abgebrochen, daraus folgt keine sinnvolle Eingabe
+		/*
 		if(n == 0)
 		{
 			System.out.println("Laenge ist null! - Denk nochmal nach!");
 			System.exit(0);
 		}
+		*/
 
 		//erstellen eines neuen RandomGenerators
 		Random rand = new Random();
@@ -64,6 +66,8 @@ public class Subarray {
 		zeitMessungNaiv(both);
 	}
 	
+	//Arrays.toString(arr);
+
 	//Methode zur Ausgabe der Testfelder
 	public static void printArr(int[] arr)
 	{
@@ -157,11 +161,7 @@ public class Subarray {
 
 		for(int i=0; i<summe.length; i++)
 		{
-			if(summe[i] == null)
-			{
-
-			}
-			else if(summe[i] > max)
+			if(summe[i] != null && summe[i] > max)
 			{
 				max = summe[i];
 				pos = i;
@@ -171,20 +171,13 @@ public class Subarray {
 		//Wenn das Maximum null ist, sind nur negative Zahlen vorhanden, deswegen wird die kleinste negative Zahl genommen 
 		if(max == 0)
 		{
-			max = arr[0];
-			pos = 0;
-			for(int i=1; i<arr.length; i++)
-			{
-				if(max < arr[i])
-				{
-					max = arr[i];
-					pos = i;
-				}	
-			}
+			System.out.print("Linke Grenze: 0" + ", Rechte Grenze: -1" + ", Gesamtsumme: 0");
+
 		}
-		
-		//Ergebnis wird ausgegeben
-		System.out.print("Linke Grenze: " + links[pos] + ", Rechte Grenze: " + rechts[pos]  + ", Gesamtsumme: " + max);
+		else{
+			//Ergebnis wird ausgegeben
+			System.out.print("Linke Grenze: " + links[pos] + ", Rechte Grenze: " + rechts[pos]  + ", Gesamtsumme: " + max);
+		}
 	}
 
 	public static void naiv(int[] arr)
@@ -219,21 +212,13 @@ public class Subarray {
 			rechts = arr.length -1;
 		}
 
-		if(pos)
+		else if(pos)
 		{
-			msum  = arr[0];
-
-			for(int i = 1; i<arr.length; i++)
-			{
-				if(msum < arr[i])
-				{
-					msum = arr[i];
-					links = rechts = i;
-				}
-			}
+			rechts = -1;
+			msum = 0;
 		}
 
-		if(pos == false && neg == false)
+		else
 		{
 			//Erste For-Schleife fuer die linke Grenze
 			for(int i=0; i<arr.length; i++)
@@ -247,7 +232,7 @@ public class Subarray {
 					//Wenn der aktuelle Wert groesser null ist
 					if(arr[j] >= 0)
 					{
-						//aktuelle Summe wir um das Arrayfeld erhöht
+						//aktuelle Summe wird um das Arrayfeld erhöht
 						asum += arr[j];
 						//Wenn die aktuelle Summe groesser als die maximale Summe wird die msum verändert und die Grenzen angepasst
 						if(asum > msum)
