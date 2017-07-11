@@ -67,8 +67,9 @@ public class Graph extends Node
 		n.addEdge(m);
 	}
 
-	public static Graph fromFile(String filepath)
+	public Graph fromFile(String filepath)
 	{
+		Graph g = new Graph();
 		RandomAccessFile file = new RandomAccessFile(filepath, "r");
 		String zeile = "";
 		//nodes = new ArrayList<Node>();
@@ -115,7 +116,7 @@ public class Graph extends Node
 				System.exit(0);
 			}
 		}
-
+	return g;
 	}
 }
 
