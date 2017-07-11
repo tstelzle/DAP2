@@ -2,29 +2,9 @@ import java.util.ArrayList;
 import java.io.RandomAccessFile;
 import java.util.StringTokenizer;
 
-public class Graph extends Node
+public class Graph
 {
-	public ArrayList<Node> nodes;
-
-	//ich glaub die ArrayList sollte woanderst initialisiert werden
-	public Graph()
-	{
-		nodes = new ArrayList<Node>();
-	}
-
-	public static void main(String[] args)
-	{
-		String dateiPfad = "";
-		try{
-			dateiPfad = args[0];
-		}
-		catch(Exception e)
-		{
-			System.out.println("Argument konnte nich eingelesen werden.");
-			System.exit(0);
-		}
-		Graph g = fromFile(dateiPfad);
-	}
+	private ArrayList<Node> nodes = new ArrayList<Node>();
 
 	public boolean contains(int id)
 	{
@@ -40,7 +20,7 @@ public class Graph extends Node
 	
 	public void addNode(int id)
 	{
-		if(getNode(id) == null)
+		if(!contains(id))
 		{
 			Node n = new Node(id);
 			nodes.add(n);
@@ -59,64 +39,87 @@ public class Graph extends Node
 		return null;
 	}
 
-	//die stimmt noch nicht
 	public void addEdge(int src, int dst)
 	{
-		Node n = new Node(src);
-		Node m = new Node(dst);
-		n.addEdge(m);
+		if(contains(src) && contains(dst))
+		{
+			Node n = getNode(src);
+			Node m = getNode(dst);
+			n.addEdge(m);
+			m.addEdge(n);
+		}
 	}
 
 	public Graph fromFile(String filepath)
 	{
+		String zeile = null;
 		Graph g = new Graph();
-		RandomAccessFile file = new RandomAccessFile(filepath, "r");
-		String zeile = "";
-		//nodes = new ArrayList<Node>();
-
+		RandomAccessFile file = null;
 		try{
-			//kein schoener Stil - hier sollte nicht while(true) udn auch nicht try ... catch stehen
-			while(true)
-			{
-				zeile = file.readLine();
-				StringTokenizer st = new StringTokenizer(zeile, ",");
-				Node src = null;
-				Node dst = null;
-				try{
-					src = new Node(Integer.parseInt(st.nextToken()));
-					dst = new Node(Integer.parseInt(st.nextToken()));
-				}
-				catch(Exception e)
-				{
-					System.out.println("Node konnte nicht erstellt werden.");
-					System.exit(0);
-				}
-				if(src != null && dst != null)
-				{
-					//anscheinend ist die ArrayList static ... 
-					nodes.add(src);
-					nodes.add(dst);
-					addEdge(dst, src);
-				}
-
-			}
+			file = new RandomAccessFile(filepath, "r");
 		}
 		catch(Exception e)
 		{
-			
+			System.out.println("Die Datei konnte nicht eingelesen werden.");
+			System.exit(0);
 		}
-		finally
-		{	
+
+		try{
+			zeile = file.readLine();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Zeile konnte nicht eingelesen werden.");
+		}
+
+		while(zeile != null)
+		{
+			StringTokenizer st = new StringTokenizer(zeile, ",");
+			int src = -1;
+			int dst = -1;
 			try{
-				file.close();
+				src = Integer.parseInt(st.nextToken());
+				dst = Integer.parseInt(st.nextToken());
 			}
 			catch(Exception e)
 			{
-				System.out.println("Reader konnte nicht geschlossen werden.");
+				System.out.println("Node konnte nicht erstellt werden.");
 				System.exit(0);
 			}
+			g.addNode(src);
+			g.addNode(dst);
+			
+			g.addEdge(src, dst);
+			
+			try{
+				zeile = file.readLine();
+			}
+			catch(Exception e)
+			{
+				zeile = null;
+			}
+		}
+
+		try{
+			file.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println("FileReader konnte nicht geschlossen werden.");
+			System.exit(0);
 		}
 	return g;
+	}
+
+	public String toString()
+	{
+		String ausgabe = "";
+
+		for(Node n : nodes)
+		{
+			ausgabe = ausgabe + n.getId() + ": " + n.toString() + "\n";
+		}
+		return ausgabe;
 	}
 }
 
