@@ -66,4 +66,17 @@ public class Node
 		}
 		return ausgabe;
 	}
+
+	public ArrayList<Node> getNeighbours()
+	{
+		ArrayList<Node> ausgabe = new ArrayList<Node>();
+		for(Edge v : list)
+		{
+			if(this.equals(v.getSrc()))
+			{
+				ausgabe.add(v.getDst());
+			}
+		}
+		return ausgabe;
+	}
 }
