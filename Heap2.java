@@ -1,10 +1,10 @@
-public class Heap {
+public class Heap2 {
 	
 	public int[] heap;
 	public int heapSize;
 	private int size;
 	
-	public Heap(int n)
+	public Heap2(int n)
 	{
 		heapSize = n;
 		heap = new int[heapSize];
@@ -31,7 +31,7 @@ public class Heap {
 		}
 		*/
 
-		Heap h = new Heap(100);
+		Heap2 h = new Heap2(100);
 		h.insert(3);
 		h.insert(4);
 		h.insert(1);
@@ -191,3 +191,4 @@ public class Heap {
 	*/
 
 }
+
