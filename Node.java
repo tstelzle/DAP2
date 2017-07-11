@@ -3,15 +3,8 @@ import java.util.ArrayList;
 public class Node
 {
 	private int id;
-	public ArrayList<Edge> list = new ArrayList<Edge>();
+	private ArrayList<Edge> list = new ArrayList<Edge>();
 	
-	/*
-	public Node()
-	{
-		list = new ArrayList<Edge>();
-	}
-	*/
-
 	public Node(int id)
 	{
 		this.id = id;
@@ -62,5 +55,15 @@ public class Node
 			return true;
 		}
 		return false;
+	}
+
+	public String toString()
+	{
+		String ausgabe = "";
+		for(Edge x : list)
+		{
+			ausgabe = ausgabe + "(" + x.getSrc().getId() + "," + x.getDst().getId() + "), ";	
+		}
+		return ausgabe;
 	}
 }
