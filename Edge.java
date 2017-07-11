@@ -14,9 +14,9 @@ public class Edge
 		Node n = new Node(5);
 		Node m = new Node(3);
 		Edge e = new Edge(n, m);
-		System.out.println(e.getSrc());
-		System.out.println(e.getDst());
 		System.out.println(e.getSrc().toString());
+		System.out.println(e.getDst().getId());
+		//System.out.println(e.getSrc().toString());
 	}
 
 	public Node getSrc()
