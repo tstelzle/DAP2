@@ -5,6 +5,8 @@ import java.util.StringTokenizer;
 public class Graph
 {
 	private ArrayList<Node> nodes = new ArrayList<Node>();
+	private int[] d;
+	private Node[] lambda;
 
 	public boolean contains(int id)
 	{
@@ -111,6 +113,42 @@ public class Graph
 	return g;
 	}
 
+	public char[] getNodes()
+	{
+		int max = 0;
+		int x = 0;
+		for(Node n : nodes)
+		{
+			x = n.getId();
+			if(x > max)
+			{
+				max = x;
+			}
+		}
+		char[] arr = new char[max+1];
+		d = new int[max+1];
+		lambda = new Node[max+1];
+
+		for(int i=0; i<d.length; i++)
+		{
+			if(contains(i))
+			{
+				d[i] = 0;
+			}
+			else{
+				d[i] = -1;
+			}
+			lambda[i] = null;
+		}
+
+		for(Node n : nodes)
+		{
+			x = n.getId();
+			arr[x] = 'w';
+		}
+		return arr;
+	}
+
 	public String toString()
 	{
 		String ausgabe = "";
@@ -120,6 +158,38 @@ public class Graph
 			ausgabe = ausgabe + n.getId() + ": " + n.toString() + "\n";
 		}
 		return ausgabe;
+	}
+
+	public int[] bfs(Graph g, int id)
+	{
+		char[] arr = getNodes();
+		ArrayList<Node> liste = new ArrayList<Node>();
+		liste.add(getNode(id));
+		int x = 0;
+
+		while(liste.size() != 0)
+		{
+			Node u = liste.get(0);
+			ArrayList<Node> neighbours = u.getNeighbours();
+			for(Node v : neighbours)
+			{
+				x = v.getId();
+				if(d[x] == -1)
+				{
+					d[x] = 0;
+				}
+				if(arr[x] == 'w')
+				{
+					arr[x] = 'g';
+					d[x] = d[u.getId()] + 1;
+					lambda[x] = u;
+					liste.add(v);
+				}
+			}
+			liste.remove(0);
+			arr[u.getId()] = 's';
+		}
+		return d;
 	}
 }
 
