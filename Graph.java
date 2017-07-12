@@ -48,6 +48,7 @@ public class Graph
 			Node n = getNode(src);
 			Node m = getNode(dst);
 			n.addEdge(m);
+			//Bei einem gerichteten Graphen, muss die naechste Zeile weggelassen werden. 
 			m.addEdge(n);
 		}
 	}
