@@ -1,4 +1,4 @@
-ublic class Edge
+public class Edge
 {
 	private Node src;
 	private Node dst;
