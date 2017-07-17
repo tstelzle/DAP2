@@ -93,7 +93,83 @@ public class GraphTest {
 	 * kuerzesten Weges von dem Knoten mit der id i zu dem Knoten mit id j an 
 	 */
 	public static double[][] apsp(Graph g) {
-		throw new UnsupportedOperationException("Aufgabe 13.2 noch nicht bearbeitet!");	
+		//double[][] kosten = g.costs;
+		ArrayList<double[][]> matrixList = new ArrayList<double[][]>();
+		ArrayList<Node> nodes = g.getNodes();
+		ArrayList<Edge> edges = g.getEdges();
+		double[][] w = new double[nodes.size()][nodes.size()];
+
+		/*
+		for(int i=0; i<kosten.length; i++)
+		{
+			for(int j=0; j<kosten[i].length; j++)
+			{
+				System.out.println("i, " + i + ", j, " + j + " : " + kosten[i][j]); 
+			}
+		}
+		*/
+
+		for(int i=0; i<nodes.size(); i++)
+		{
+			for(int j=0; j<nodes.size(); j++)
+			{
+				/*
+				for(Edge v : edges)
+				{
+					if(j == v.getDest().getID())
+					{
+						w[i][j] = v.getCost();
+					}
+				}
+				*/
+				
+				
+				double tmp = g.getCost(i, j);
+				System.out.println(tmp);
+				/*
+				tmp = g.costs[i][j];
+				System.out.println(tmp);
+				tmp = g.getCost(j,i);
+				System.out.println(tmp);
+				System.out.println("-----------------------");	
+				*/
+				if(tmp == -1)
+				{
+					w[i][j] = Double.POSITIVE_INFINITY;
+				}
+				else{
+					w[i][j] = g.getCost(j, i); 
+				}
+				
+			}
+		}
+
+		matrixList.add(w);
+		
+		/*
+		for(int i=0; i<w.length; i++)
+		{
+			for(int j=0; j<w[i].length; j++)
+			{
+				w[i][j] = 0;
+			}
+		}
+		*/
+
+		for(int k=1; k<nodes.size(); k++)
+		{
+			for(int i=1; i<nodes.size(); i++)
+			{
+				for(int j=1; j<nodes.size(); j++)
+				{
+					double[][] tmp = matrixList.get(k-1);
+					w[i][j] = Math.min(tmp[i][j], Math.min(tmp[i][k], tmp[k][j]));
+				}
+			}
+			matrixList.add(w);
+		}
+
+		return matrixList.get(matrixList.size()-1);
 	}
 
 	/**
