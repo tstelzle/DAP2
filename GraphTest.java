@@ -12,46 +12,50 @@ public class GraphTest {
 	 */
 	public static double[] sssp(Graph g, int source) 
 	{	
+		//Arrylist mit allen Knoten wird deklariert und initialisert
 		ArrayList<Node> node = g.getNodes();
+		//Die Matrix zur Berechnung wird deklariert und initialisiert
 		double[][] memory = new double[node.size()][node.size()];
 		
+		//Die erste Zeile wird mit "unendlich" initialisert
 		for(int i=0; i<memory[0].length; i++)
 		{
 			memory[0][i] = Double.POSITIVE_INFINITY;
 		}
 		
+		//der Startknotenabstand wird auf 0 gesetzt
 		memory[0][source] = 0;
 		
+		//die Matrix wird startend mit dem Knoten nach dem Startknoten durchlaufen 
 		for(int i=1; i<node.size(); i++)
 		{
+			//ArrayList mit allen Kanten der Knoten wird deklariert und initialisiert
 			ArrayList<Edge> tmp = g.getEdges();
+			//alle Knoten in dem Graphen werden durchlaufen
 			for(Node v : node)
 			{
+				//ArrayList edges zur Speicherung der Kanten die auf den Knoten zeigen wird deklariert und initialisiert
 				ArrayList<Edge> edges = new ArrayList<Edge>();
 				for(int u=0; u<tmp.size(); u++)
 				{
+					//Falls die Destination der Kante gleich dem Knoten ist wird er edges hinzugefuegt
 					if(tmp.get(u).getDest().getID() == v.getID())
 					{
 						edges.add(tmp.get(u));
 					}
 				}
 				
-				/*
-				System.out.println("--------------------------------------------------");
-				for(int u=0; u<edges.size(); u++)
-				{
-					System.out.println("Source: " + edges.get(u).getSource().getID() + ", Dest: " + edges.get(u).getDest().getID() + ", Cost: " + edges.get(u).getCost());
-				}
-				System.out.println("--------------------------------------------------");
-				*/
-
+				//double Wert zum Vergleich fuer das Minium wird deklariert und initialisiert
 				double min = Double.POSITIVE_INFINITY;
 				
+				//alle ausgewaehlten Kanten werden durchlaufen 
 				for(int u=0; u<edges.size(); u++)
 				{
+					//die Kosten der Kante werden zwischengespeichert
 					double cost = edges.get(u).getCost();
-					//System.out.println("Test: Source: " + edges.get(u).getSource().getID() + ", Dest: " + edges.get(u).getDest().getID() + ", v: " + v.getID() + ", Cost: " + g.getCost(edges.get(u).getSource().getID(), v.getID()));
+					//das Minimum wird ausgewaehlt
 					double now = Math.min(memory[i-1][v.getID()], memory[i-1][edges.get(u).getSource().getID()] + cost);
+					//Falls das neue Minimum kleiner als das aktuelle ist, wird es ersetzt
 					if(now < min)
 					{
 						min = now;
@@ -60,28 +64,21 @@ public class GraphTest {
 					
 				}
 				
+				//Der minimale Kostenaufwand zu dem Knoten wird in der Matrix gespeichert
 				memory[i][v.getID()] = min;
 			}
 		}
 		
-		/*
-		for(int x=0; x<node.size(); x++)
-		{
-			for(int y=0; y<node.size(); y++)
-			{
-				System.out.print(memory[x][y] + " ");
-			}
-			System.out.println("");
-		}
-		*/
-		
+		//Liste zur Ausgabe wird deklariert und initialisiert
 		double[] minCost = new double[node.size()];
 		
+		//die letzte Zeile der Matrix wird in die Ausgabeliste kopiert
 		for(int i=0; i<node.size(); i++)
 		{
 			minCost[i] = memory[node.size() -1][i];
 		}
 		
+		//die Ausgabe list wird zurueckgegeben
 		return minCost;
 	}
 
@@ -92,47 +89,25 @@ public class GraphTest {
 	 * @return Matrix mit Weglaengen; Element (i,j) gibt die Laenge eines 
 	 * kuerzesten Weges von dem Knoten mit der id i zu dem Knoten mit id j an 
 	 */
-	public static double[][] apsp(Graph g) {
-		//double[][] kosten = g.costs;
+	public static double[][] apsp(Graph g)
+	{
+		//eine ArrayList zur Speicherung der Matrizen wird deklariert und initialisiert
 		ArrayList<double[][]> matrixList = new ArrayList<double[][]>();
+		//die Knoten und Kanter des Graphen werden gespeichert
 		ArrayList<Node> nodes = g.getNodes();
 		ArrayList<Edge> edges = g.getEdges();
+		//die Matrix wird deklariert und initialisiert
 		double[][] w = new double[nodes.size()][nodes.size()];
 
-		/*
-		for(int i=0; i<kosten.length; i++)
-		{
-			for(int j=0; j<kosten[i].length; j++)
-			{
-				System.out.println("i, " + i + ", j, " + j + " : " + kosten[i][j]); 
-			}
-		}
-		*/
-
+		//die Spalten der Matrix werden durchlaufen 
 		for(int i=0; i<nodes.size(); i++)
 		{
+			//die Zeilen der Matrix werden durchlaufen
 			for(int j=0; j<nodes.size(); j++)
 			{
-				/*
-				for(Edge v : edges)
-				{
-					if(j == v.getDest().getID())
-					{
-						w[i][j] = v.getCost();
-					}
-				}
-				*/
-				
-				
+				//die Kosten der Kante werden zwischengespeichert
 				double tmp = g.getCost(i, j);
-				System.out.println(tmp);
-				/*
-				tmp = g.costs[i][j];
-				System.out.println(tmp);
-				tmp = g.getCost(j,i);
-				System.out.println(tmp);
-				System.out.println("-----------------------");	
-				*/
+				//Falls keine Kante existiert wird der Wert auf "unendlich" gesetzt ansonste auf die Kosten der Kante
 				if(tmp == -1)
 				{
 					w[i][j] = Double.POSITIVE_INFINITY;
@@ -144,31 +119,29 @@ public class GraphTest {
 			}
 		}
 
+		//die Matrix wird in der ArrayList zwischengespeichert
 		matrixList.add(w);
 		
-		/*
-		for(int i=0; i<w.length; i++)
-		{
-			for(int j=0; j<w[i].length; j++)
-			{
-				w[i][j] = 0;
-			}
-		}
-		*/
-
+		//Durchlaufen der verschiedenen Matrizen
 		for(int k=1; k<nodes.size(); k++)
 		{
+			//Durchlaufen der Spalten der Matrix
 			for(int i=1; i<nodes.size(); i++)
 			{
+				//Durchlaufend der Zeilen der Matrix
 				for(int j=1; j<nodes.size(); j++)
 				{
+					//die vorherige Matrix wird zwischengespeichert
 					double[][] tmp = matrixList.get(k-1);
+					//das Minimum der Kantenkosten wird in der neuen Matrix gespeichert
 					w[i][j] = Math.min(tmp[i][j], Math.min(tmp[i][k], tmp[k][j]));
 				}
 			}
+			//die Matrix wird in die ArrayList zwischengespeichert
 			matrixList.add(w);
 		}
 
+		//die letzte ArrayList wird ausgegeben
 		return matrixList.get(matrixList.size()-1);
 	}
 
